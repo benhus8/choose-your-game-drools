@@ -9,11 +9,34 @@ rule "Init"
 		insert(new WindowState(""));
 end
 
-rule "Update Window State"
-when
-    $oknoStan : WindowState(text == null || text == "")
-then
-    $oknoStan.setText("Płeć osoby : ");
-    update($oknoStan);
+rule "1-Type-of-game-question"
+	when
+    	$oknoStan : WindowState(getText() == "")
+    
+	then
+		System.out.println("1-Type-of-game-question");
+    	$oknoStan.setText("What type of game are you looking for?");
+    	update($oknoStan);
+end
+
+rule "1-Type-of-game-answer"
+	when
+    	$oknoStan : WindowState(getText() == "What type of game are you looking for?")
+	then
+		System.out.println("1-Type-of-game-answer");
+    	$oknoStan.setButtonText1("Wargame");
+    	update($oknoStan);
+end
+
+rule "1-Type-of-game-answer-update"
+	when
+    	$oknoStan : WindowState(getAnswer() == "Wargame")
+	then
+		System.out.println("1-Type-of-game-answer-update");
+    	$oknoStan.setButtonText1("");
+    	$oknoStan.setAnswer("");
+    	$oknoStan.setText("Answered Wargame!");
+    	update($oknoStan);
+    	
 end
 
