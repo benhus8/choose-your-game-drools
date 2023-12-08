@@ -14,6 +14,8 @@ public class DroolsTest extends JFrame {
     private JButton fireRulesButton;
     private JLabel resultLabel;
     private KieSession kieSession;
+    
+    private WindowState windowState;
 
 
     public DroolsTest() {
@@ -31,11 +33,12 @@ public class DroolsTest extends JFrame {
         add(panel);
 
         initializeDrools();
-
+        updateWindowState();
+        
         fireRulesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fireRules();
+                clickButton1();
             }
         });
     }
@@ -44,20 +47,32 @@ public class DroolsTest extends JFrame {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer();
         kieSession = kContainer.newKieSession("ksession-rules");
-    }
-
-    private void fireRules() {
         kieSession.fireAllRules();
-        WindowState windowState = (WindowState) kieSession.getObjects(new ClassObjectFilter(WindowState.class))
+    }
+    
+    private void updateWindowState() {
+    	windowState = (WindowState) kieSession.getObjects(new ClassObjectFilter(WindowState.class))
         	    .stream()
         	    .findFirst()
         	    .orElse(null);
         String result = "empty";
         if (windowState != null) {
-        	System.out.println("We are here");
         	result = windowState.getText();
         }
         resultLabel.setText("Result: " + result);
+        String buttonDescription = (windowState != null) ? windowState.getButtonText1() : "Empty button text";
+        fireRulesButton.setText(buttonDescription);
+        if(windowState.getButtonText1().isBlank())
+        	fireRulesButton.setVisible(false);
+    }
+
+    private void clickButton1() {
+        kieSession.fireAllRules();
+        updateWindowState();
+        windowState.setAnswer(windowState.getButtonText1());
+        kieSession.update(kieSession.getFactHandle(windowState), windowState);
+        kieSession.fireAllRules();
+        updateWindowState();
     }
 
     public static void main(String[] args) {
