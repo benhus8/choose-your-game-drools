@@ -41,7 +41,7 @@ rule "HANDLE_ANSWERED_QUESTION"
     	$windowState.setText("");
     	update($windowState);
 end
-
+// INIT QUESTION - What type of game are you looking for?
 rule "1-Type-of-game-question"
 	when
 	then
@@ -105,6 +105,40 @@ rule "2-wargame-possible-answers"
 		
 		$windowState.setButtonText1("Just me");
     	$windowState.setButtonText2("2 or more");
+    	$windowState.setButtonText3("");
+    	$windowState.setButtonText4("");
+    	update($windowState);
+    	retract($question);
+end
+//WARGAME - JUST ME - FINAL ANSWER
+rule "3-wargame-final-answer"
+	when
+		$answer: Answer(answerText == "Just me");
+		$windowState : WindowState();
+	then
+		System.out.println("2-wargame-players");
+    	retract($answer);
+    	$windowState.setText("Your recommendations: <br> 1. Field Commander Series <br> 2. Thunderbolt: Apache Leader <br> 3. Space Infantry");
+    	update($windowState);	
+end
+
+//WARGAME- DO YOU HAVE ANY WARGAME EXPERIENCE
+rule "3-wargame-question"
+	when
+		$answer: Answer(answerText == "2 or more");
+	then
+		System.out.println("2-wargame-players");
+    	insert(new Question("Do you have any wargaming experience?"));
+    	retract($answer);
+end
+rule "3-wargame-possible-answers"
+	when
+		$question: Question(questionText == "Do you have any wargaming experience?");
+		$windowState : WindowState();
+	then
+		
+		$windowState.setButtonText1("Yes");
+    	$windowState.setButtonText2("It's new to me");
     	$windowState.setButtonText3("");
     	$windowState.setButtonText4("");
     	update($windowState);

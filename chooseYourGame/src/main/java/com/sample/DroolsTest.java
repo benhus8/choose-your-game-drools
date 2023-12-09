@@ -36,6 +36,13 @@ public class DroolsTest extends JFrame {
         Font font = questionLabel.getFont();
         questionLabel.setFont(new Font(font.getName(), Font.PLAIN, 18));
         
+        questionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        questionLabel.setVerticalAlignment(SwingConstants.CENTER); 
+        questionLabel.setVerticalTextPosition(SwingConstants.CENTER); 
+        questionLabel.setOpaque(true); 
+        questionLabel.setBackground(Color.WHITE);
+        questionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         
@@ -105,7 +112,7 @@ public class DroolsTest extends JFrame {
         if (windowState != null) {
         	result = windowState.getText();
         }
-        questionLabel.setText(result);
+        questionLabel.setText("<html>" + result + "</html>");
         
         String button1Description = (windowState != null) ? windowState.getButtonText1() : "Empty button text";
         answerButton1.setText(button1Description);
