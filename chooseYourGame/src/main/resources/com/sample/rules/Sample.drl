@@ -2,41 +2,116 @@ package com.sample.rules
 
 import com.sample.WindowState;
 import com.sample.DroolsTest;
- 
+
+declare Question
+	questionText: String
+end
+
+declare Answer
+	answerText: String
+end
+
 rule "Init"
 	when
 	then
 		insert(new WindowState(""));
 end
 
+rule "NEW_QUESTION_RULE"
+	when
+		$question: Question();
+		$windowState : WindowState(getText() == "");
+	then
+		System.out.println("NEW QUESTION RULE");
+		$windowState.setText($question.getQuestionText());
+    	update($windowState);
+end
+
+rule "HANDLE_ANSWERED_QUESTION"
+	when
+    	$windowState : WindowState(getAnswer() != "");
+	then
+		System.out.println("HANDLE ANSWER BUTTON");
+		insert(new Answer($windowState.getAnswer()));
+		System.out.println("Answered: " + $windowState.getAnswer()); 	
+    	
+    	$windowState.setButtonText1("");
+    	$windowState.setButtonText2("");
+    	$windowState.setAnswer("");
+    	$windowState.setText("");
+    	update($windowState);
+end
+
 rule "1-Type-of-game-question"
 	when
-    	$oknoStan : WindowState(getText() == "")
-    
 	then
 		System.out.println("1-Type-of-game-question");
-    	$oknoStan.setText("What type of game are you looking for?");
-    	update($oknoStan);
+		insert(new Question("What type of game are you looking for?"));
 end
 
-rule "1-Type-of-game-answer"
+rule "1-Type-of-game-set-answers"
 	when
-    	$oknoStan : WindowState(getText() == "What type of game are you looking for?")
+		$question: Question(questionText == "What type of game are you looking for?");
+		$windowState : WindowState();
 	then
-		System.out.println("1-Type-of-game-answer");
-    	$oknoStan.setButtonText1("Wargame");
-    	update($oknoStan);
+		System.out.println("1-Type-of-game-set-answers");
+		
+		$windowState.setButtonText1("A strategy game");
+    	$windowState.setButtonText2("I want a Wargame");
+    	$windowState.setButtonText3("");
+    	$windowState.setButtonText4("");
+    	update($windowState);
+    	retract($question);
+end
+// STRATEGY-- What's your favorite theme?
+rule "2-strategy-question"
+	when
+		$answer: Answer(answerText == "A strategy game");
+	then
+		System.out.println("2-strategy-favorite-theme-question");
+    	insert(new Question("What's your favorite theme?"));
+    	retract($answer);
 end
 
-rule "1-Type-of-game-answer-update"
+rule "2-strategy-possible-answers"
 	when
-    	$oknoStan : WindowState(getAnswer() == "Wargame")
+		$question: Question(questionText == "What's your favorite theme?");
+		$windowState : WindowState();
 	then
-		System.out.println("1-Type-of-game-answer-update");
-    	$oknoStan.setButtonText1("");
-    	$oknoStan.setAnswer("");
-    	$oknoStan.setText("Answered Wargame!");
-    	update($oknoStan);
-    	
+		
+		$windowState.setButtonText1("Science Fiction");
+    	$windowState.setButtonText2("Fantasy");
+    	$windowState.setButtonText3("");
+    	$windowState.setButtonText4("");
+    	update($windowState);
+    	retract($question);
 end
+
+//WARGAME - For how many players?
+rule "2-wargame-question"
+	when
+		$answer: Answer(answerText == "I want a Wargame");
+	then
+		System.out.println("2-wargame-players");
+    	insert(new Question("For how many players?"));
+    	retract($answer);
+end
+
+rule "2-wargame-possible-answers"
+	when
+		$question: Question(questionText == "For how many players?");
+		$windowState : WindowState();
+	then
+		
+		$windowState.setButtonText1("Just me");
+    	$windowState.setButtonText2("2 or more");
+    	$windowState.setButtonText3("");
+    	$windowState.setButtonText4("");
+    	update($windowState);
+    	retract($question);
+end
+
+
+
+
 
