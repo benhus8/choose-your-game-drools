@@ -5,144 +5,53 @@ import com.sample.DroolsTest;
 
 declare Question
 	questionText: String
+	answer: String
 end
 
-declare Answer
-	answerText: String
+rule "answer_handler"
+when
+	$windowState : WindowState(getAnswer() != "");
+	$question : Question(answer==null);
+then
+	modify($question) {
+        setAnswer($windowState.getAnswer())
+    	}
+  	$windowState.setAnswer("");
+    update($question);
+    update($windowState);
 end
 
 rule "Init"
 	when
 	then
-		insert(new WindowState(""));
+		System.out.println("init");
+		insert(new WindowState("What type of game are you looking for?", new String[]{"I want a wargame", "A strategy game"}));
+    	insert(new Question("What type of game are you looking for?", null));
 end
 
-rule "NEW_QUESTION_RULE"
+
+
+rule "2-wargame"
 	when
-		$question: Question();
-		$windowState : WindowState(getText() == "");
+		$question: Question(questionText == "What type of game are you looking for?", answer == "I want a wargame");
+		$windowState : WindowState(getAnswer() == "");
 	then
-		System.out.println("NEW QUESTION RULE");
-		$windowState.setText($question.getQuestionText());
+		System.out.println("2-wargame");
+		insert(new Question("For how many players?", null));
+		$windowState.setText("For how many players?");
+		$windowState.setPossibleAnswers(new String[]{"2 or more", "Just me"});
     	update($windowState);
 end
 
-rule "HANDLE_ANSWERED_QUESTION"
+rule "3-wargame"
 	when
-    	$windowState : WindowState(getAnswer() != "");
+		$question: Question(questionText == "For how many players?", answer == "Just me");
+		$windowState : WindowState(getAnswer() == "");
 	then
-		System.out.println("HANDLE ANSWER BUTTON");
-		insert(new Answer($windowState.getAnswer()));
-		System.out.println("Answered: " + $windowState.getAnswer()); 	
-    	
-    	$windowState.setButtonText1("");
-    	$windowState.setButtonText2("");
-    	$windowState.setAnswer("");
-    	$windowState.setText("");
+		System.out.println("3-wargame-recommendation");
+		$windowState.setText("Recommendation: <br> 1. Field Commander Series <br> 2. Thunderbolt: Apache Leader <br> 3. Space Infantry");
+		$windowState.setPossibleAnswers(null);
     	update($windowState);
-end
-// INIT QUESTION - What type of game are you looking for?
-rule "1-Type-of-game-question"
-	when
-	then
-		System.out.println("1-Type-of-game-question");
-		insert(new Question("What type of game are you looking for?"));
-end
-
-rule "1-Type-of-game-set-answers"
-	when
-		$question: Question(questionText == "What type of game are you looking for?");
-		$windowState : WindowState();
-	then
-		System.out.println("1-Type-of-game-set-answers");
-		
-		$windowState.setButtonText1("A strategy game");
-    	$windowState.setButtonText2("I want a Wargame");
-    	$windowState.setButtonText3("");
-    	$windowState.setButtonText4("");
-    	update($windowState);
-    	retract($question);
-end
-// STRATEGY-- What's your favorite theme?
-rule "2-strategy-question"
-	when
-		$answer: Answer(answerText == "A strategy game");
-	then
-		System.out.println("2-strategy-favorite-theme-question");
-    	insert(new Question("What's your favorite theme?"));
-    	retract($answer);
-end
-
-rule "2-strategy-possible-answers"
-	when
-		$question: Question(questionText == "What's your favorite theme?");
-		$windowState : WindowState();
-	then
-		
-		$windowState.setButtonText1("Science Fiction");
-    	$windowState.setButtonText2("Fantasy");
-    	$windowState.setButtonText3("");
-    	$windowState.setButtonText4("");
-    	update($windowState);
-    	retract($question);
-end
-
-//WARGAME - For how many players?
-rule "2-wargame-question"
-	when
-		$answer: Answer(answerText == "I want a Wargame");
-	then
-		System.out.println("2-wargame-players");
-    	insert(new Question("For how many players?"));
-    	retract($answer);
-end
-
-rule "2-wargame-possible-answers"
-	when
-		$question: Question(questionText == "For how many players?");
-		$windowState : WindowState();
-	then
-		
-		$windowState.setButtonText1("Just me");
-    	$windowState.setButtonText2("2 or more");
-    	$windowState.setButtonText3("");
-    	$windowState.setButtonText4("");
-    	update($windowState);
-    	retract($question);
-end
-//WARGAME - JUST ME - FINAL ANSWER
-rule "3-wargame-final-answer"
-	when
-		$answer: Answer(answerText == "Just me");
-		$windowState : WindowState();
-	then
-		System.out.println("2-wargame-players");
-    	retract($answer);
-    	$windowState.setText("Your recommendations: <br> 1. Field Commander Series <br> 2. Thunderbolt: Apache Leader <br> 3. Space Infantry");
-    	update($windowState);	
-end
-
-//WARGAME- DO YOU HAVE ANY WARGAME EXPERIENCE
-rule "3-wargame-question"
-	when
-		$answer: Answer(answerText == "2 or more");
-	then
-		System.out.println("2-wargame-players");
-    	insert(new Question("Do you have any wargaming experience?"));
-    	retract($answer);
-end
-rule "3-wargame-possible-answers"
-	when
-		$question: Question(questionText == "Do you have any wargaming experience?");
-		$windowState : WindowState();
-	then
-		
-		$windowState.setButtonText1("Yes");
-    	$windowState.setButtonText2("It's new to me");
-    	$windowState.setButtonText3("");
-    	$windowState.setButtonText4("");
-    	update($windowState);
-    	retract($question);
 end
 
 
