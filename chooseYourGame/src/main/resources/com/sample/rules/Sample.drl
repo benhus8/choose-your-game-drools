@@ -30,26 +30,289 @@ rule "Init"
 end
 
 
-
-rule "2-wargame"
+rule "2-want-wargame"
 	when
 		$question: Question(questionText == "What type of game are you looking for?", answer == "I want a wargame");
-		$windowState : WindowState(getAnswer() == "");
+		$windowState : WindowState(getAnswer() == "", getText() == "What type of game are you looking for?");
 	then
-		System.out.println("2-wargame");
+		System.out.println("2-want-wargame");
 		insert(new Question("For how many players?", null));
 		$windowState.setText("For how many players?");
 		$windowState.setPossibleAnswers(new String[]{"2 or more", "Just me"});
     	update($windowState);
 end
 
-rule "3-wargame"
+rule "3-wargame-1player"
 	when
 		$question: Question(questionText == "For how many players?", answer == "Just me");
-		$windowState : WindowState(getAnswer() == "");
+		$windowState : WindowState(getAnswer() == "", getText() == "For how many players?");
 	then
-		System.out.println("3-wargame-recommendation");
+		System.out.println("3-wargame-1player");
 		$windowState.setText("Recommendation: <br> 1. Field Commander Series <br> 2. Thunderbolt: Apache Leader <br> 3. Space Infantry");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "3-wargame-2players"
+	when
+		$question: Question(questionText == "For how many players?", answer == "2 or more");
+		$windowState : WindowState(getAnswer() == "", getText() == "For how many players?");
+	then
+		System.out.println("3-wargame-2players");
+		insert(new Question("Do you have any wargaming experience?", null));
+		$windowState.setText("Do you have any wargaming experience?");
+		$windowState.setPossibleAnswers(new String[]{"It's new to me", "Yes"});
+    	update($windowState);
+end
+
+rule "4-wargame-new"
+	when
+		$question: Question(questionText == "Do you have any wargaming experience?", answer == "It's new to me");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you have any wargaming experience?" );
+	then
+		System.out.println("4-wargame-new");
+		insert(new Question("Are you a fan of Risk?", null));
+		$windowState.setText("Are you a fan of Risk?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "5-wargame-risk"
+	when
+		$question: Question(questionText == "Are you a fan of Risk?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Are you a fan of Risk?");
+	then
+		System.out.println("5-wargame-risk");
+		$windowState.setText("Recommendation: <br> 1. Risk: Legacy ");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "5-wargame-no-risk"
+	when
+		$question: Question(questionText == "Are you a fan of Risk?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Are you a fan of Risk?");
+	then
+		System.out.println("5-wargame-no-risk");
+		insert(new Question("World history, or high fantasy?", null));
+		$windowState.setText("World history, or high fantasy?");
+		$windowState.setPossibleAnswers(new String[]{"History", "Fantasy"});
+    	update($windowState);
+end
+
+rule "6-wargame-no-risk-history"
+	when
+		$question: Question(questionText == "World history, or high fantasy?", answer == "History");
+		$windowState : WindowState(getAnswer() == "", getText() == "World history, or high fantasy?");
+	then
+		System.out.println("6-wargame-no-risk-history");
+		$windowState.setText("Recommendation: <br> 1. Memoir '44");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-wargame-no-risk-fantasy"
+	when
+		$question: Question(questionText == "World history, or high fantasy?", answer == "Fantasy");
+		$windowState : WindowState(getAnswer() == "", getText() == "World history, or high fantasy?");
+	then
+		System.out.println("6-wargame-no-risk-fantasy");
+		$windowState.setText("Recommendation: <br> 1. Battles of Westeros");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "4-wargame-exp"
+	when
+		$question: Question(questionText == "Do you have any wargaming experience?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you have any wargaming experience?");
+	then
+		System.out.println("4-wargame-exp");
+		insert(new Question("Want to command Roman legions?", null));
+		$windowState.setText("Want to command Roman legions?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "5-wargame-exp-roman"
+	when
+		$question: Question(questionText == "Want to command Roman legions?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Want to command Roman legions?");
+	then
+		System.out.println("5-wargame-exp-roman");
+		$windowState.setText("Recommendation: <br> 1. Commmands & Colors: Ancients");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "5-wargame-exp-no"
+	when
+		$question: Question(questionText == "Want to command Roman legions?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Want to command Roman legions?");
+	then
+		System.out.println("5-wargame-exp-no");
+		insert(new Question("Lead 19th Century battle lines?", null));
+		$windowState.setText("Lead 19th Century battle lines?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "6-wargame-exp-lead"
+	when
+		$question: Question(questionText == "Lead 19th Century battle lines?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Lead 19th Century battle lines?");
+	then
+		System.out.println("6-wargame-exp-lead");
+		$windowState.setText("Recommendation: <br> 1. 1812: The Invasion of Canada");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-wargame-exp-no"
+	when
+		$question: Question(questionText == "Lead 19th Century battle lines?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Lead 19th Century battle lines?");
+	then
+		System.out.println("6-wargame-exp-no");
+		insert(new Question("How about World War II?", null));
+		$windowState.setText("How about World War II?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "7-wargame-exp-war"
+	when
+		$question: Question(questionText == "How about World War II?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about World War II?");
+	then
+		System.out.println("7-wargame-exp-war");
+		insert(new Question("Card- or dice- driven combat?", null));
+		$windowState.setText("Card- or dice- driven combat?");
+		$windowState.setPossibleAnswers(new String[]{"roll roll roll", "shuffle shuffle"});
+    	update($windowState);
+end
+
+rule "8-wargame-exp-shuffle"
+	when
+		$question: Question(questionText == "Card- or dice- driven combat?", answer == "shuffle shuffle");
+		$windowState : WindowState(getAnswer() == "", getText() == "Card- or dice- driven combat?");
+	then
+		System.out.println("8-wargame-exp-shuffle");
+		$windowState.setText("Recommendation: <br> 1. Combat Commander Series");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "8-wargame-exp-roll"
+	when
+		$question: Question(questionText == "Card- or dice- driven combat?", answer == "roll roll roll");
+		$windowState : WindowState(getAnswer() == "", getText() == "Card- or dice- driven combat?");
+	then
+		System.out.println("8-wargame-exp-roll");
+		$windowState.setText("Recommendation: <br> 1. Tide of Iron");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-wargame-exp-no"
+	when
+		$question: Question(questionText == "How about World War II?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about World War II?");
+	then
+		System.out.println("7-wargame-exp-no");
+		insert(new Question("Modern Warfare, then?", null));
+		$windowState.setText("Modern Warfare, then?");
+		$windowState.setPossibleAnswers(new String[]{"Yes, I like the immediacy", "No, I'm tired of real wars"});
+    	update($windowState);
+end
+
+rule "8-wargame-exp-modern"
+	when
+		$question: Question(questionText == "Modern Warfare, then?", answer == "Yes, I like the immediacy");
+		$windowState : WindowState(getAnswer() == "", getText() == "Modern Warfare, then?");
+	then
+		System.out.println("8-wargame-exp-modern");
+		$windowState.setText("Recommendation: <br> 1. Labyrinth: The War on Terror");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "8-wargame-exp-tired"
+	when
+		$question: Question(questionText == "Modern Warfare, then?", answer == "No, I'm tired of real wars");
+		$windowState : WindowState(getAnswer() == "", getText() == "Modern Warfare, then?");
+	then
+		System.out.println("8-wargame-exp-tired");
+		insert(new Question("Science Fiction or alternate history?", null));
+		$windowState.setText("Science Fiction or alternate history?");
+		$windowState.setPossibleAnswers(new String[]{"Science Fiction", "Alt-History"});
+    	update($windowState);
+end
+
+rule "9-wargame-exp-sf"
+	when
+		$question: Question(questionText == "Science Fiction or alternate history?", answer == "Alt-History");
+		$windowState : WindowState(getAnswer() == "", getText() == "Science Fiction or alternate history?");
+	then
+		System.out.println("9-wargame-exp-sf");
+		insert(new Question("Tactical miniatures, or targe-scale strategy?", null));
+		$windowState.setText("Tactical miniatures, or targe-scale strategy?");
+		$windowState.setPossibleAnswers(new String[]{"Tactical", "Strategic"});
+    	update($windowState);
+end
+
+rule "10-wargame-exp-tac"
+	when
+		$question: Question(questionText == "Tactical miniatures, or targe-scale strategy?", answer == "Tactical");
+		$windowState : WindowState(getAnswer() == "", getText() == "Tactical miniatures, or targe-scale strategy?");
+	then
+		System.out.println("10-wargame-exp-tac");
+		$windowState.setText("Recommendation: <br> 1. Dust Tactics");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-wargame-exp-str"
+	when
+		$question: Question(questionText == "Tactical miniatures, or targe-scale strategy?", answer == "Strategic");
+		$windowState : WindowState(getAnswer() == "", getText() == "Tactical miniatures, or targe-scale strategy?");
+	then
+		System.out.println("10-wargame-exp-str");
+		$windowState.setText("Recommendation: <br> 1. Fortress America");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "9-wargame-exp-alt"
+	when
+		$question: Question(questionText == "Science Fiction or alternate history?", answer == "Science Fiction");
+		$windowState : WindowState(getAnswer() == "", getText() == "Science Fiction or alternate history?");
+	then
+		System.out.println("9-wargame-exp-alt");
+		insert(new Question("Space ships or giant robots?", null));
+		$windowState.setText("Space ships or giant robots?");
+		$windowState.setPossibleAnswers(new String[]{"Ships!", "Mechs!"});
+    	update($windowState);
+end
+
+rule "10-wargame-exp-ship"
+	when
+		$question: Question(questionText == "Space ships or giant robots?", answer == "Ships!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Space ships or giant robots?");
+	then
+		System.out.println("10-wargame-exp-ship");
+		$windowState.setText("Recommendation: <br> 1. Battleship Galaxies");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-wargame-exp-meh"
+	when
+		$question: Question(questionText == "Space ships or giant robots?", answer == "Mechs!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Space ships or giant robots?");
+	then
+		System.out.println("10-wargame-exp-meh");
+		$windowState.setText("Recommendation: <br> 1. Battletech");
 		$windowState.setPossibleAnswers(null);
     	update($windowState);
 end
@@ -57,4 +320,920 @@ end
 
 
 
+rule "2-want-strategy"
+	when
+		$question: Question(questionText == "What type of game are you looking for?", answer == "A strategy game");
+		$windowState : WindowState(getAnswer() == "", getText() == "What type of game are you looking for?");
+	then
+		System.out.println("2-want-strategy");
+		insert(new Question("What's your favorite theme?", null));
+		$windowState.setText("What's your favorite theme?");
+		$windowState.setPossibleAnswers(new String[]{"Fantasy", "Science Fiction"});
+    	update($windowState);
+end
 
+rule "3-want-strategy-sf"
+	when
+		$question: Question(questionText == "What's your favorite theme?", answer == "Science Fiction");
+		$windowState : WindowState(getAnswer() == "", getText() == "What's your favorite theme?");
+	then
+		System.out.println("3-want-strategy-sf");
+		insert(new Question("Star Wars fan?", null));
+		$windowState.setText("Star Wars fan?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "4-want-strategy-sw"
+	when
+		$question: Question(questionText == "Star Wars fan?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Star Wars fan?");
+	then
+		System.out.println("4-want-strategy-sw");
+		insert(new Question("Grand adventure or tactical space combat?", null));
+		$windowState.setText("Grand adventure or tactical space combat?");
+		$windowState.setPossibleAnswers(new String[]{"Adventure", "Pew! Pew!"});
+    	update($windowState);
+end
+
+rule "5-want-strategy-ad"
+	when
+		$question: Question(questionText == "Grand adventure or tactical space combat?", answer == "Adventure");
+		$windowState : WindowState(getAnswer() == "", getText() == "Grand adventure or tactical space combat?");
+	then
+		System.out.println("5-want-strategy-ad");
+		$windowState.setText("Recommendation: <br> 1. Star Wars Living Card Game");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "5-want-strategy-pew"
+	when
+		$question: Question(questionText == "Grand adventure or tactical space combat?", answer == "Pew! Pew!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Grand adventure or tactical space combat?");
+	then
+		System.out.println("5-want-strategy-pew");
+		$windowState.setText("Recommendation: <br> 1. Star Wars: X-Wing Miniature Game");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "4-want-strategy-no"
+	when
+		$question: Question(questionText == "Star Wars fan?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Star Wars fan?");
+	then
+		System.out.println("4-want-strategy-no");
+		insert(new Question("Star Trek, then?", null));
+		$windowState.setText("Star Trek, then?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "5-want-strategy-st"
+	when
+		$question: Question(questionText == "Star Trek, then?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Star Trek, then?");
+	then
+		System.out.println("5-want-strategy-st");
+		insert(new Question("One-on-one, or working together?", null));
+		$windowState.setText("One-on-one, or working together?");
+		$windowState.setPossibleAnswers(new String[]{"Competitive", "Cooperative"});
+    	update($windowState);
+end
+
+rule "6-want-strategy-com"
+	when
+		$question: Question(questionText == "One-on-one, or working together?", answer == "Competitive");
+		$windowState : WindowState(getAnswer() == "", getText() == "One-on-one, or working together?");
+	then
+		System.out.println("6-want-strategy-com");
+		$windowState.setText("Recommendation: <br> 1. Star Trek: Fleet Captains");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-cop"
+	when
+		$question: Question(questionText == "One-on-one, or working together?", answer == "Cooperative");
+		$windowState : WindowState(getAnswer() == "", getText() == "One-on-one, or working together?");
+	then
+		System.out.println("6-want-strategy-cop");
+		$windowState.setText("Recommendation: <br> 1. Star Trek Expeditions");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "5-want-strategy-no"
+	when
+		$question: Question(questionText == "Star Trek, then?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Star Trek, then?");
+	then
+		System.out.println("5-want-strategy-no");
+		insert(new Question("Battlestar Galactica?", null));
+		$windowState.setText("Battlestar Galactica?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "6-want-strategy-bg"
+	when
+		$question: Question(questionText == "Battlestar Galactica?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Battlestar Galactica?");
+	then
+		System.out.println("6-want-strategy-bg");
+		$windowState.setText("Recommendation: <br> 1. Battlestar Galactica: the Board Game");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-no"
+	when
+		$question: Question(questionText == "Battlestar Galactica?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Battlestar Galactica?");
+	then
+		System.out.println("6-want-strategy-no");
+		insert(new Question("Explore, Expand, Exploit, and Exterminate?", null));
+		$windowState.setText("Explore, Expand, Exploit, and Exterminate?");
+		$windowState.setPossibleAnswers(new String[]{"Of course!", "That's not right!"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-eee"
+	when
+		$question: Question(questionText == "Explore, Expand, Exploit, and Exterminate?", answer == "Of course!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Explore, Expand, Exploit, and Exterminate?");
+	then
+		System.out.println("7-want-strategy-eee");
+		insert(new Question("So, just how epic are we getting?", null));
+		$windowState.setText("So, just how epic are we getting?");
+		$windowState.setPossibleAnswers(new String[]{"We've got all day", "It is a work night..."});
+    	update($windowState);
+end
+
+rule "8-want-strategy-we"
+	when
+		$question: Question(questionText == "So, just how epic are we getting?", answer == "We've got all day");
+		$windowState : WindowState(getAnswer() == "", getText() == "So, just how epic are we getting?");
+	then
+		System.out.println("8-want-strategy-we");
+		$windowState.setText("Recommendation: <br> 1. Twilight Imperium: 3rd Edition");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "8-want-strategy-it"
+	when
+		$question: Question(questionText == "So, just how epic are we getting?", answer == "It is a work night...");
+		$windowState : WindowState(getAnswer() == "", getText() == "So, just how epic are we getting?");
+	then
+		System.out.println("8-want-strategy-it");
+		$windowState.setText("Recommendation: <br> 1. Eclipse");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-nr"
+	when
+		$question: Question(questionText == "Explore, Expand, Exploit, and Exterminate?", answer == "That's not right!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Explore, Expand, Exploit, and Exterminate?");
+	then
+		System.out.println("7-want-strategy-nr");
+		insert(new Question("How about being an alien race?", null));
+		$windowState.setText("How about being an alien race?");
+		$windowState.setPossibleAnswers(new String[]{"Maybe not", "That sounds fun"});
+    	update($windowState);
+end
+
+rule "8-want-strategy-alien"
+	when
+		$question: Question(questionText == "How about being an alien race?", answer == "That sounds fun");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about being an alien race?");
+	then
+		System.out.println("8-want-strategy-alien");
+		insert(new Question("Doing battle..", null));
+		$windowState.setText("Doing battle..");
+		$windowState.setPossibleAnswers(new String[]{"In Space", "For the Galactic Centre", "For Earth!"});
+    	update($windowState);
+end
+
+rule "9-want-strategy-alien-sp"
+	when
+		$question: Question(questionText == "Doing battle..", answer == "In Space");
+		$windowState : WindowState(getAnswer() == "", getText() == "Doing battle..");
+	then
+		System.out.println("9-want-strategy-alien-sp");
+		$windowState.setText("Recommendation: <br> 1. Cosmic Encounter");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "9-want-strategy-alien-gal"
+	when
+		$question: Question(questionText == "Doing battle..", answer == "For the Galactic Centre");
+		$windowState : WindowState(getAnswer() == "", getText() == "Doing battle..");
+	then
+		System.out.println("9-want-strategy-alien-gal");
+		$windowState.setText("Recommendation: <br> 1. Rex: Final Days of an Empire");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "9-want-strategy-alien-erth"
+	when
+		$question: Question(questionText == "Doing battle..", answer == "For Earth!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Doing battle..");
+	then
+		System.out.println("9-want-strategy-alien-erth");
+		$windowState.setText("Recommendation: <br> 1. Conquest of Planet Earth");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "8-want-strategy-no"
+	when
+		$question: Question(questionText == "How about being an alien race?", answer == "Maybe not");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about being an alien race?");
+	then
+		System.out.println("8-want-strategy-no");
+		insert(new Question("How about a card game?", null));
+		$windowState.setText("How about a card game?");
+		$windowState.setPossibleAnswers(new String[]{"Sure, that works", "I like my boards"});
+    	update($windowState);
+end
+
+rule "9-want-strategy-card"
+	when
+		$question: Question(questionText == "How about a card game?", answer == "Sure, that works");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about a card game?");
+	then
+		System.out.println("9-want-strategy-card");
+		insert(new Question("A Deck Builder?", null));
+		$windowState.setText("A Deck Builder?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "10-want-strategy-card-db"
+	when
+		$question: Question(questionText == "A Deck Builder?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "A Deck Builder?");
+	then
+		System.out.println("10-want-strategy-card-db");
+		$windowState.setText("Recommendation: <br> 1. Core Worlds");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-card-no"
+	when
+		$question: Question(questionText == "A Deck Builder?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "A Deck Builder?");
+	then
+		System.out.println("10-want-strategy-card-no");
+		insert(new Question("A living card game?", null));
+		$windowState.setText("A living card game?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "11-want-strategy-card-living"
+	when
+		$question: Question(questionText == "A living card game?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "A living card game?");
+	then
+		System.out.println("11-want-strategy-card-living");
+		$windowState.setText("Recommendation: <br> 1. Android: Netrunner");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "11-want-strategy-card-no"
+	when
+		$question: Question(questionText == "A living card game?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "A living card game?");
+	then
+		System.out.println("11-want-strategy-card-no");
+		$windowState.setText("Recommendation: <br> 1. Race for the Galaxy");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "9-want-strategy-board"
+	when
+		$question: Question(questionText == "How about a card game?", answer == "I like my boards");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about a card game?");
+	then
+		System.out.println("9-want-strategy-card");
+		insert(new Question("If not an alien, I'll be a...", null));
+		$windowState.setText("If not an alien, I'll be a...");
+		$windowState.setPossibleAnswers(new String[]{"Athlete", "Galactic Cooperation", "Space Crew on a Mission", "Merchant"});
+    	update($windowState);
+end
+
+rule "10-want-strategy-board-ath"
+	when
+		$question: Question(questionText == "If not an alien, I'll be a...", answer == "Athlete");
+		$windowState : WindowState(getAnswer() == "", getText() == "If not an alien, I'll be a...");
+	then
+		System.out.println("10-want-strategy-card-ath");
+		$windowState.setText("Recommendation: <br> 1. Dreadball: The Futuristic Sport Game");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-board-gal"
+	when
+		$question: Question(questionText == "If not an alien, I'll be a...", answer == "Galactic Cooperation");
+		$windowState : WindowState(getAnswer() == "", getText() == "If not an alien, I'll be a...");
+	then
+		System.out.println("10-want-strategy-card-gal");
+		$windowState.setText("Recommendation: <br> 1. Phantom League");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-board-sp"
+	when
+		$question: Question(questionText == "If not an alien, I'll be a...", answer == "Space Crew on a Mission");
+		$windowState : WindowState(getAnswer() == "", getText() == "If not an alien, I'll be a...");
+	then
+		System.out.println("10-want-strategy-card-sp");
+		insert(new Question("How will you succeed?", null));
+		$windowState.setText("How will you succeed?");
+		$windowState.setPossibleAnswers(new String[]{"Teamwork and high-speed planning", "Teamwork and dexterity"});
+    	update($windowState);
+end
+
+rule "11-want-strategy-board-sp-sa"
+	when
+		$question: Question(questionText == "How will you succeed?", answer == "Teamwork and high-speed planning");
+		$windowState : WindowState(getAnswer() == "", getText() == "How will you succeed?");
+	then
+		System.out.println("11-want-strategy-card-sp-sa");
+		$windowState.setText("Recommendation: <br> 1. Space Alert");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "11-want-strategy-board-sp-sc"
+	when
+		$question: Question(questionText == "How will you succeed?", answer == "Teamwork and dexterity");
+		$windowState : WindowState(getAnswer() == "", getText() == "How will you succeed?");
+	then
+		System.out.println("11-want-strategy-card-sp-sa");
+		$windowState.setText("Recommendation: <br> 1. Space Cadets");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-board-mer"
+	when
+		$question: Question(questionText == "If not an alien, I'll be a...", answer == "Merchant");
+		$windowState : WindowState(getAnswer() == "", getText() == "If not an alien, I'll be a...");
+	then
+		System.out.println("10-want-strategy-card-mer");
+		insert(new Question("Seriously?", null));
+		$windowState.setText("Seriously?");
+		$windowState.setPossibleAnswers(new String[]{"It's serious business", "Nah, we just want a gigle"});
+    	update($windowState);
+end
+
+rule "11-want-strategy-board-mer-ser"
+	when
+		$question: Question(questionText == "Seriously?", answer == "It's serious business");
+		$windowState : WindowState(getAnswer() == "", getText() == "Seriously?");
+	then
+		System.out.println("11-want-strategy-board-mer-ser");
+		$windowState.setText("Recommendation: <br> 1. Merchant of Venus");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "11-want-strategy-board-mer-no"
+	when
+		$question: Question(questionText == "Seriously?", answer == "Nah, we just want a gigle");
+		$windowState : WindowState(getAnswer() == "", getText() == "Seriously?");
+	then
+		System.out.println("11-want-strategy-board-mer-no");
+		$windowState.setText("Recommendation: <br> 1. Galaxy Trucker");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+
+rule "3-want-strategy-fantasy"
+	when
+		$question: Question(questionText == "What's your favorite theme?", answer == "Fantasy");
+		$windowState : WindowState(getAnswer() == "", getText() == "What's your favorite theme?");
+	then
+		System.out.println("3-want-strategy-fantasy");
+		insert(new Question("Do you want a dungeon crawling adventure?", null));
+		$windowState.setText("Do you want a dungeon crawling adventure?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "3-want-strategy-fantasy-dung"
+	when
+		$question: Question(questionText == "Do you want a dungeon crawling adventure?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you want a dungeon crawling adventure?");
+	then
+		System.out.println("3-want-strategy-fantasy-dung");
+		insert(new Question("A serious one?", null));
+		$windowState.setText("A serious one?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "4-want-strategy-fantasy-dung-no"
+	when
+		$question: Question(questionText == "A serious one?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "A serious one?");
+	then
+		System.out.println("4-want-strategy-fantasy-dung-no");
+		$windowState.setText("Recommendation: <br> 1. Munchkin");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "4-want-strategy-fantasy-dung-ser"
+	when
+		$question: Question(questionText == "A serious one?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "A serious one?");
+	then
+		System.out.println("4-want-strategy-fantasy-dung-ser");
+		insert(new Question("How many players?", null));
+		$windowState.setText("How many players?");
+		$windowState.setPossibleAnswers(new String[]{"Just the two of us", "More than two"});
+    	update($windowState);
+end
+
+rule "5-want-strategy-fantasy-dung-ser-2"
+	when
+		$question: Question(questionText == "How many players?", answer == "Just the two of us");
+		$windowState : WindowState(getAnswer() == "", getText() == "How many players?");
+	then
+		System.out.println("5-want-strategy-fantasy-dung-ser-2");
+		insert(new Question("Crush or out-maneuver your enemies?", null));
+		$windowState.setText("Crush or out-maneuver your enemies?");
+		$windowState.setPossibleAnswers(new String[]{"Fight", "Maneuver"});
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-dung-ser-2-fg"
+	when
+		$question: Question(questionText == "Crush or out-maneuver your enemies?", answer == "Fight");
+		$windowState : WindowState(getAnswer() == "", getText() == "Crush or out-maneuver your enemies?");
+	then
+		System.out.println("6-want-strategy-fantasy-dung-ser-2-fg");
+		$windowState.setText("Recommendation: <br> 1. Claustrophobia");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-dung-ser-2-man"
+	when
+		$question: Question(questionText == "Crush or out-maneuver your enemies?", answer == "Maneuver");
+		$windowState : WindowState(getAnswer() == "", getText() == "Crush or out-maneuver your enemies?");
+	then
+		System.out.println("6-want-strategy-fantasy-dung-ser-2-man");
+		$windowState.setText("Recommendation: <br> 1. Dungeon Twister 2: Prison");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "5-want-strategy-fantasy-dung-ser-more"
+	when
+		$question: Question(questionText == "How many players?", answer == "More than two");
+		$windowState : WindowState(getAnswer() == "", getText() == "How many players?");
+	then
+		System.out.println("5-want-strategy-fantasy-dung-ser-more");
+		insert(new Question("Cooperative or Competitive?", null));
+		$windowState.setText("Cooperative or Competitive?");
+		$windowState.setPossibleAnswers(new String[]{"Cooperative", "Competitive"});
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-dung-ser-more-coop"
+	when
+		$question: Question(questionText == "Cooperative or Competitive?", answer == "Cooperative");
+		$windowState : WindowState(getAnswer() == "", getText() == "Cooperative or Competitive?");
+	then
+		System.out.println("6-want-strategy-fantasy-dung-ser-more-coop");
+		insert(new Question("Playing with kids?", null));
+		$windowState.setText("Playing with kids?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-dung-ser-more-coop-kids"
+	when
+		$question: Question(questionText == "Playing with kids?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Playing with kids?");
+	then
+		System.out.println("7-want-strategy-fantasy-dung-ser-more-coop-kids");
+		$windowState.setText("Recommendation: <br> 1. Mice & Mystics");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-dung-ser-more-coop-no"
+	when
+		$question: Question(questionText == "Playing with kids?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Playing with kids?");
+	then
+		System.out.println("7-want-strategy-fantasy-dung-ser-more-coop-no");
+		$windowState.setText("Recommendation: <br> 1. Dungeons and Dragons: Legend of Drizzt");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-dung-ser-more-com"
+	when
+		$question: Question(questionText == "Cooperative or Competitive?", answer == "Competitive");
+		$windowState : WindowState(getAnswer() == "", getText() == "Cooperative or Competitive?");
+	then
+		System.out.println("6-want-strategy-fantasy-dung-ser-more-com");
+		insert(new Question("Do you want a campaign?", null));
+		$windowState.setText("Do you want a campaign?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "Just one game"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-dung-ser-more-com-camp"
+	when
+		$question: Question(questionText == "Do you want a campaign?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you want a campaign?");
+	then
+		System.out.println("7-want-strategy-fantasy-dung-ser-more-com-camp");
+		$windowState.setText("Recommendation: <br> 1. Descent: Journeys in the Dark 2nd Edition");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-dung-ser-more-com-no"
+	when
+		$question: Question(questionText == "Do you want a campaign?", answer == "Just one game");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you want a campaign?");
+	then
+		System.out.println("7-want-strategy-fantasy-dung-ser-more-com-no");
+		$windowState.setText("Recommendation: <br> 1. Dungeon Run");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "3-want-strategy-fantasy-no"
+	when
+		$question: Question(questionText == "Do you want a dungeon crawling adventure?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you want a dungeon crawling adventure?");
+	then
+		System.out.println("3-want-strategy-fantasy-no");
+		insert(new Question("How about managing your own dungeon?", null));
+		$windowState.setText("How about managing your own dungeon?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "4-want-strategy-fantasy-own"
+	when
+		$question: Question(questionText == "How about managing your own dungeon?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about managing your own dungeon?");
+	then
+		System.out.println("4-want-strategy-fantasy-own");
+		$windowState.setText("Recommendation: <br> 1. Dungeon Lords");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "4-want-strategy-fantasy-nomg"
+	when
+		$question: Question(questionText == "How about managing your own dungeon?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about managing your own dungeon?");
+	then
+		System.out.println("4-want-strategy-fantasy-nomg");
+		insert(new Question("Want the whole questing thing, eh?", null));
+		$windowState.setText("Want the whole questing thing, eh?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "No"});
+    	update($windowState);
+end
+
+rule "5-want-strategy-fantasy-nomg-quest"
+	when
+		$question: Question(questionText == "Want the whole questing thing, eh?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Want the whole questing thing, eh?");
+	then
+		System.out.println("5-want-strategy-fantasy-nomg-quest");
+		insert(new Question("Competitive or Cooperative?", null));
+		$windowState.setText("Competitive or Cooperative?");
+		$windowState.setPossibleAnswers(new String[]{"Cooperative", "Competitive", "Cooperative - if I can backstab"});
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-nomg-quest-coopif"
+	when
+		$question: Question(questionText == "Competitive or Cooperative?", answer == "Cooperative - if I can backstab");
+		$windowState : WindowState(getAnswer() == "", getText() == "Competitive or Cooperative?");
+	then
+		System.out.println("6-want-strategy-fantasy-nomg-quest-coopif");
+		$windowState.setText("Recommendation: <br> 1. Shadows over Camelot");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-nomg-quest-coop"
+	when
+		$question: Question(questionText == "Competitive or Cooperative?", answer == "Cooperative");
+		$windowState : WindowState(getAnswer() == "", getText() == "Competitive or Cooperative?");
+	then
+		System.out.println("6-want-strategy-fantasy-nomg-quest-coop");
+		insert(new Question("Board game or card game?", null));
+		$windowState.setText("Board game or card game?");
+		$windowState.setPossibleAnswers(new String[]{"Boards", "Cards"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-quest-coop-board"
+	when
+		$question: Question(questionText == "Board game or card game?", answer == "Boards");
+		$windowState : WindowState(getAnswer() == "", getText() == "Board game or card game?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-quest-coop-board");
+		$windowState.setText("Recommendation: <br> 1. Defenders of the Realm");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-quest-coop-card"
+	when
+		$question: Question(questionText == "Board game or card game?", answer == "Cards");
+		$windowState : WindowState(getAnswer() == "", getText() == "Board game or card game?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-quest-coop-card");
+		$windowState.setText("Recommendation: <br> 1. Lord of the Rings Living Card Game");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-nomg-quest-com"
+	when
+		$question: Question(questionText == "Competitive or Cooperative?", answer == "Competitive");
+		$windowState : WindowState(getAnswer() == "", getText() == "Competitive or Cooperative?");
+	then
+		System.out.println("6-want-strategy-fantasy-nomg-quest-com");
+		insert(new Question("Mind getting trounced by random events?", null));
+		$windowState.setText("Mind getting trounced by random events?");
+		$windowState.setPossibleAnswers(new String[]{"Yes, Strategy matters", "No, it's the experience that counts"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-quest-com-str"
+	when
+		$question: Question(questionText == "Mind getting trounced by random events?", answer == "Yes, Strategy matters");
+		$windowState : WindowState(getAnswer() == "", getText() == "Mind getting trounced by random events?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-quest-com-str");
+		$windowState.setText("Recommendation: <br> 1. Mage Knight");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-quest-com-exp"
+	when
+		$question: Question(questionText == "Mind getting trounced by random events?", answer == "No, it's the experience that counts");
+		$windowState : WindowState(getAnswer() == "", getText() == "Mind getting trounced by random events?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-quest-com-exp");
+		insert(new Question("Is storytelling important?", null));
+		$windowState.setText("Is storytelling important?");
+		$windowState.setPossibleAnswers(new String[]{"Yes", "Not as much as combat!"});
+    	update($windowState);
+end
+
+rule "8-want-strategy-fantasy-nomg-quest-com-exp-str"
+	when
+		$question: Question(questionText == "Is storytelling important?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Is storytelling important?");
+	then
+		System.out.println("8-want-strategy-fantasy-nomg-quest-com-exp-str");
+		$windowState.setText("Recommendation: <br> 1. Tales of the Arabian Nights");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "8-want-strategy-fantasy-nomg-quest-com-exp-no"
+	when
+		$question: Question(questionText == "Is storytelling important?", answer == "Not as much as combat!");
+		$windowState : WindowState(getAnswer() == "", getText() == "Is storytelling important?");
+	then
+		System.out.println("8-want-strategy-fantasy-nomg-quest-com-exp-no");
+		$windowState.setText("Recommendation: <br> 1. Talisman");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "5-want-strategy-fantasy-nomg-no"
+	when
+		$question: Question(questionText == "Want the whole questing thing, eh?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Want the whole questing thing, eh?");
+	then
+		System.out.println("5-want-strategy-fantasy-nomg-no");
+		insert(new Question("Do you like Deckbuilders?", null));
+		$windowState.setText("Do you like Deckbuilders?");
+		$windowState.setPossibleAnswers(new String[]{"Yes","No"});
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-nomg-no-deck"
+	when
+		$question: Question(questionText == "Do you like Deckbuilders?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you like Deckbuilders?");
+	then
+		System.out.println("6-want-strategy-fantasy-nomg-no-deck");
+		insert(new Question("Competitive Deck Builders?", null));
+		$windowState.setText("Competitive Deck Builders?");
+		$windowState.setPossibleAnswers(new String[]{"Competitive","Cooperative"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-no-deck-comp"
+	when
+		$question: Question(questionText == "Competitive Deck Builders?", answer == "Competitive");
+		$windowState : WindowState(getAnswer() == "", getText() == "Competitive Deck Builders?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-no-deck-comp");
+		$windowState.setText("Recommendation: <br> 1. Thunderstone: Advance");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-no-deck-coop"
+	when
+		$question: Question(questionText == "Competitive Deck Builders?", answer == "Cooperative");
+		$windowState : WindowState(getAnswer() == "", getText() == "Competitive Deck Builders?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-no-deck-coop");
+		$windowState.setText("Recommendation: <br> 1. Rune Age");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "6-want-strategy-fantasy-nomg-no-no"
+	when
+		$question: Question(questionText == "Do you like Deckbuilders?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Do you like Deckbuilders?");
+	then
+		System.out.println("6-want-strategy-fantasy-nomg-no-no");
+		insert(new Question("Lord of the rings fan?", null));
+		$windowState.setText("Lord of the rings fan?");
+		$windowState.setPossibleAnswers(new String[]{"Yes","No"});
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-no-no-fan"
+	when
+		$question: Question(questionText == "Lord of the rings fan?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Lord of the rings fan?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-no-no-fan");
+		$windowState.setText("Recommendation: <br> 1. War of the Ring");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "7-want-strategy-fantasy-nomg-no-no-no"
+	when
+		$question: Question(questionText == "Lord of the rings fan?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Lord of the rings fan?");
+	then
+		System.out.println("7-want-strategy-fantasy-nomg-no-no-no");
+		insert(new Question("How about castle defense?", null));
+		$windowState.setText("How about castle defense?");
+		$windowState.setPossibleAnswers(new String[]{"Sounds fun!","Not for me"});
+    	update($windowState);
+end
+
+rule "8-want-strategy-fantasy-nomg-no-no-no-fun"
+	when
+		$question: Question(questionText == "How about castle defense?", answer == "Sounds fun!");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about castle defense?");
+	then
+		System.out.println("8-want-strategy-fantasy-nomg-no-no-no-fun");
+		insert(new Question("Cooperative or Competitive??", null));
+		$windowState.setText("Cooperative or Competitive??");
+		$windowState.setPossibleAnswers(new String[]{"Cooperative","Competitive"});
+    	update($windowState);
+end
+
+rule "9-want-strategy-fantasy-nomg-no-no-no-fun-coop"
+	when
+		$question: Question(questionText == "Cooperative or Competitive??", answer == "Cooperative");
+		$windowState : WindowState(getAnswer() == "", getText() == "Cooperative or Competitive??");
+	then
+		System.out.println("9-want-strategy-fantasy-nomg-no-no-no-fun-coop");
+		$windowState.setText("Recommendation: <br> 1. Castle Panic");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "9-want-strategy-fantasy-nomg-no-no-no-fun-comp"
+	when
+		$question: Question(questionText == "Cooperative or Competitive??", answer == "Competitive");
+		$windowState : WindowState(getAnswer() == "", getText() == "Cooperative or Competitive??");
+	then
+		System.out.println("9-want-strategy-fantasy-nomg-no-no-no-fun-comp");
+		$windowState.setText("Recommendation: <br> 1. Dragon Rampage");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "8-want-strategy-fantasy-nomg-no-no-no-no"
+	when
+		$question: Question(questionText == "How about castle defense?", answer == "Not for me");
+		$windowState : WindowState(getAnswer() == "", getText() == "How about castle defense?");
+	then
+		System.out.println("8-want-strategy-fantasy-nomg-no-no-no-no");
+		insert(new Question("Conquest in a fantasy world?", null));
+		$windowState.setText("Conquest in a fantasy world?");
+		$windowState.setPossibleAnswers(new String[]{"Yes","No"});
+    	update($windowState);
+end
+
+rule "9-want-strategy-fantasy-nomg-no-no-no-no-fantasy"
+	when
+		$question: Question(questionText == "Conquest in a fantasy world?", answer == "Yes");
+		$windowState : WindowState(getAnswer() == "", getText() == "Conquest in a fantasy world?");
+	then
+		System.out.println("9-want-strategy-fantasy-nomg-no-no-no-no");
+		insert(new Question("Epic?", null));
+		$windowState.setText("Epic?");
+		$windowState.setPossibleAnswers(new String[]{"Yes! It's gotta be big","No, keep it quick"});
+    	update($windowState);
+end
+
+rule "10-want-strategy-fantasy-nomg-no-no-no-no-fantasy-big"
+	when
+		$question: Question(questionText == "Epic?", answer == "Yes! It's gotta be big");
+		$windowState : WindowState(getAnswer() == "", getText() == "Epic?");
+	then
+		System.out.println("10-want-strategy-fantasy-nomg-no-no-no-no-big");
+		$windowState.setText("Recommendation: <br> 1. Runewars");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-fantasy-nomg-no-no-no-no-fantasy-quick"
+	when
+		$question: Question(questionText == "Epic?", answer == "No, keep it quick");
+		$windowState : WindowState(getAnswer() == "", getText() == "Epic?");
+	then
+		System.out.println("10-want-strategy-fantasy-nomg-no-no-no-no-quick");
+		$windowState.setText("Recommendation: <br> 1. Small World");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "9-want-strategy-fantasy-nomg-no-no-no-no-no"
+	when
+		$question: Question(questionText == "Conquest in a fantasy world?", answer == "No");
+		$windowState : WindowState(getAnswer() == "", getText() == "Conquest in a fantasy world?");
+	then
+		System.out.println("9-want-strategy-fantasy-nomg-no-no-no-no-no");
+		insert(new Question("Everyday life, eh?", null));
+		$windowState.setText("Everyday life, eh?");
+		$windowState.setPossibleAnswers(new String[]{"Running a business","Relaxing after work", "Annihilating your business rivals"});
+    	update($windowState);
+end
+
+rule "10-want-strategy-fantasy-nomg-no-no-no-no-no-run"
+	when
+		$question: Question(questionText == "Everyday life, eh?", answer == "Running a business");
+		$windowState : WindowState(getAnswer() == "", getText() == "Everyday life, eh?");
+	then
+		System.out.println("10-want-strategy-fantasy-nomg-no-no-no-no-no-run");
+		$windowState.setText("Recommendation: <br> 1. Dungeon Petz");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-fantasy-nomg-no-no-no-no-no-rel"
+	when
+		$question: Question(questionText == "Everyday life, eh?", answer == "Relaxing after work");
+		$windowState : WindowState(getAnswer() == "", getText() == "Everyday life, eh?");
+	then
+		System.out.println("10-want-strategy-fantasy-nomg-no-no-no-no-no-rel");
+		$windowState.setText("Recommendation: <br> 1. Red Dragon Inn");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
+
+rule "10-want-strategy-fantasy-nomg-no-no-no-no-no-riv"
+	when
+		$question: Question(questionText == "Everyday life, eh?", answer == "Annihilating your business rivals");
+		$windowState : WindowState(getAnswer() == "", getText() == "Everyday life, eh?");
+	then
+		System.out.println("10-want-strategy-fantasy-nomg-no-no-no-no-no-riv");
+		$windowState.setText("Recommendation: <br> 1. Mage Wars");
+		$windowState.setPossibleAnswers(null);
+    	update($windowState);
+end
